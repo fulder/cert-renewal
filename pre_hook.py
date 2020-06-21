@@ -13,7 +13,7 @@ with open(file_name, "w") as f:
     f.write(file_content)
 
 # <username>@<IP>:<PORT>:<path>
-m = re.match(r"(\w)@([^:]+):(\d+):(\w+)", validation_path)
+m = re.match(r"(\w+)@([^:]+):(\d+):(.+)", validation_path)
 if m:
     username = m.group(1)
     ip = m.group(2)
