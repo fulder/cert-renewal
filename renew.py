@@ -4,14 +4,17 @@ import re
 import sys
 from subprocess import Popen
 
+import utils
+
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def main():
     args = _get_args()
 
-    # _run_certbot(args.domain, args.certbot_folder, args.validation_path, args.pfx_locations)
-    _create_pfx(args.domain, args.certbot_folder)
+    _run_certbot(args.domain, args.certbot_folder, args.validation_path, args.pfx_locations)
+    _create_pfx(args.domain, args.certbot_folder, args.pfx_password)
+    _copy_pfx(args.domain, args.certbot_folder, args.pfx_locations)
 
 
 def _get_args():
@@ -42,8 +45,6 @@ def _run_certbot(domain, certbot_folder, validation_path, pfx_locations):
 
     env = os.environ.copy()
     env["VALIDATION_PATH"] = validation_path
-    env["PFX_LOCATIONS"] = pfx_locations
-    env["CERTBOT_FOLDER"] = certbot_folder
 
     p = Popen([
         "certbot", "certonly",
@@ -79,6 +80,15 @@ def _create_pfx(domain, certbot_folder, pfx_password):
     p.communicate()
     if p.returncode != 0:
         raise RuntimeError("Error during openssl command")
+
+
+def _copy_pfx(domain, certbot_folder, pfx_locations):
+    pfx_location = os.path.join(certbot_folder, "config", "live", domain, "certificate.pfx")
+
+    if pfx_locations is not None:
+        copy_locations = pfx_locations.split(",")
+        for copy_location in copy_locations:
+            utils.cp_or_scp(pfx_location, copy_location)
 
 
 if __name__ == "__main__":
