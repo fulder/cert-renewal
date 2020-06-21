@@ -1,7 +1,6 @@
 # Running
 ## Requirements
 
-* Certbot
 * OpenSSL
 * `pip install -U -r requirements.txt`
 
