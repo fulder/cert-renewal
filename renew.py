@@ -10,19 +10,22 @@ CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 def main():
     args = _get_args()
 
-    #_run_certbot(args.domain, args.certbot_folder, args.validation_path)
+    # _run_certbot(args.domain, args.certbot_folder, args.validation_path, args.pfx_locations)
     _create_pfx(args.domain, args.certbot_folder)
 
 
 def _get_args():
     parser = argparse.ArgumentParser(description='Cert Renewal')
-    parser.add_argument('--domain',  required=True, help="Domain name to renew")
-    parser.add_argument('--pfx_password', required=True, help="Password for the PFX file")
+    parser.add_argument('--domain', required=True, help="Domain name to renew")
+    parser.add_argument('--pfx-password', required=True, help="Password for the PFX file")
     parser.add_argument('--validation-path', required=True,
                         help="Path where HTTP-01 validation file should be placed. "
                              "Use '<username>@<IP>:<PORT>:<path>' for scp")
     parser.add_argument('--certbot-folder', required=False, help="Path to certbot out folder",
                         default="./letsencrypt")
+    parser.add_argument('--pfx-locations', required=False,
+                        help="Comma separated paths where to copy the PFX file. "
+                             "Use '<username>@<IP>:<PORT>:<path>' for SCP")
     args = parser.parse_args()
 
     if not re.match(r"(\w@[^:]+:\d+:)*\w+", args.validation_path):
@@ -32,13 +35,14 @@ def _get_args():
     return args
 
 
-def _run_certbot(domain, certbot_folder, validation_path):
+def _run_certbot(domain, certbot_folder, validation_path, pfx_locations):
     config_dir = os.path.join(certbot_folder, "config")
     work_dir = os.path.join(certbot_folder, "work")
     logs_dir = os.path.join(certbot_folder, "logs")
 
     env = os.environ.copy()
     env["VALIDATION_PATH"] = validation_path
+    env["PFX_LOCATIONS"] = pfx_locations
 
     p = Popen([
         "certbot", "certonly",

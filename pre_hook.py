@@ -3,8 +3,7 @@ import os
 import re
 import shutil
 
-from paramiko import SSHClient
-from scp import SCPClient
+import utils
 
 file_content = os.getenv("CERTBOT_VALIDATION")
 file_name = os.getenv("CERTBOT_TOKEN")
@@ -19,16 +18,8 @@ if m:
     username = m.group(1)
     ip = m.group(2)
     port = int(m.group(3))
-    path = m.group(4)
+    remote_path = m.group(4)
 
-    print(f"Uploading file with name: {file_name}, to remote host: {ip}:{port} path: {path}/{file_name}")
-
-    ssh = SSHClient()
-    ssh.load_system_host_keys()
-    ssh.connect(ip, port=port, username=username)
-
-    scp = SCPClient(ssh.get_transport())
-    scp.put(file_name, remote_path=path)
-    scp.close()
+    utils.scp(file_name, username, ip, port, remote_path)
 else:
     shutil.copy2(file_name, validation_path)
