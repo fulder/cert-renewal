@@ -43,6 +43,7 @@ def _run_certbot(domain, certbot_folder, validation_path, pfx_locations):
     env = os.environ.copy()
     env["VALIDATION_PATH"] = validation_path
     env["PFX_LOCATIONS"] = pfx_locations
+    env["CERTBOT_FOLDER"] = certbot_folder
 
     p = Popen([
         "certbot", "certonly",
