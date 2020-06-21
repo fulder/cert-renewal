@@ -25,7 +25,7 @@ if m:
 
     ssh = SSHClient()
     ssh.load_system_host_keys()
-    ssh.connect(ip, port=port)
+    ssh.connect(ip, port=port, username=username)
 
     scp = SCPClient(ssh.get_transport())
     scp.put(file_name, remote_path=path)
