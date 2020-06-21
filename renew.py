@@ -15,7 +15,7 @@ def main():
 
 def _get_args():
     parser = argparse.ArgumentParser(description='Cert Renewal')
-    parser.add_argument('--domain', required=True, help="Domain name to renew")
+    parser.add_argument('--domain', "-d", required=True, help="Domain name to renew")
     return parser.parse_args()
 
 
