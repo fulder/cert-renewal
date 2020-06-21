@@ -54,7 +54,6 @@ def _run_certbot(domain, certbot_folder, validation_path, pfx_locations):
         "--config-dir", config_dir,
         "--work-dir", work_dir,
         "--logs-dir", logs_dir,
-        "--staging",
         "--manual-auth-hook", os.path.join(CURRENT_DIR, "pre_hook.py"),
         "--manual-cleanup-hook", os.path.join(CURRENT_DIR, "post_hook.py"),
     ], env=env)
