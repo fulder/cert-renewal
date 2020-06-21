@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import re
+import shutil
 
 from paramiko import SSHClient
 from scp import SCPClient
@@ -29,3 +30,5 @@ if m:
     scp = SCPClient(ssh.get_transport())
     scp.put(file_name, remote_path=path)
     scp.close()
+else:
+    shutil.copy2(file_name, validation_path)
