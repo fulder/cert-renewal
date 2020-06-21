@@ -25,7 +25,7 @@ def _get_args():
                         help="Path where HTTP-01 validation file should be placed. "
                              "Use '<username>@<IP>:<PORT>:<path>' for scp")
     parser.add_argument('--certbot-folder', required=False, help="Path to certbot out folder",
-                        default="./letsencrypt")
+                        default=os.path.join(CURRENT_DIR, "letsencrypt"))
     parser.add_argument('--pfx-locations', required=False,
                         help="Comma separated paths where to copy the PFX file. "
                              "Use '<username>@<IP>:<PORT>:<path>' for SCP")
