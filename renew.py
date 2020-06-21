@@ -30,7 +30,7 @@ def _run_certbot(domain, certbot_folder):
         "-d", domain,
         "--manual",
         "--config-dir", config_dir,
-        "--work-dir", work_dir
+        "--work-dir", work_dir,
         "--logs-dir", logs_dir
     ])
     p.communicate()
