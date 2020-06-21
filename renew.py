@@ -20,7 +20,7 @@ def _get_args():
     parser.add_argument('--validation-path', required=True,
                         help="Path where HTTP-01 validation file should be placed. Use '<username>@<IP>:<PORT>:<path>' for scp")
     parser.add_argument('--certbot-folder', required=False, help="Path to certbot out folder",
-                        default="~/letsencrypt")
+                        default="./letsencrypt")
     args = parser.parse_args()
 
     if not re.match(r"(\w@[^:]+:\d+:)*\w+", args.validation_path):
