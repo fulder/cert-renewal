@@ -20,7 +20,7 @@ def _get_args():
 
 
 def _run_certbot(domain):
-    p = Popen(["certbot", "certonly", "--preferred-challanges", "http", "-d", domain, "--manual"])
+    p = Popen(["certbot", "certonly", "--preferred-challenges", "http", "-d", domain, "--manual"])
     p.communicate()
 
 
