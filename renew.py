@@ -10,15 +10,17 @@ CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 def main():
     args = _get_args()
 
-    _run_certbot(args.domain, args.certbot_folder, args.validation_path)
+    #_run_certbot(args.domain, args.certbot_folder, args.validation_path)
     _create_pfx(args.domain, args.certbot_folder)
 
 
 def _get_args():
     parser = argparse.ArgumentParser(description='Cert Renewal')
-    parser.add_argument('--domain', "-d", required=True, help="Domain name to renew")
+    parser.add_argument('--domain',  required=True, help="Domain name to renew")
+    parser.add_argument('--pfx_password', required=True, help="Password for the PFX file")
     parser.add_argument('--validation-path', required=True,
-                        help="Path where HTTP-01 validation file should be placed. Use '<username>@<IP>:<PORT>:<path>' for scp")
+                        help="Path where HTTP-01 validation file should be placed. "
+                             "Use '<username>@<IP>:<PORT>:<path>' for scp")
     parser.add_argument('--certbot-folder', required=False, help="Path to certbot out folder",
                         default="./letsencrypt")
     args = parser.parse_args()
@@ -55,13 +57,20 @@ def _run_certbot(domain, certbot_folder, validation_path):
         raise RuntimeError("Error during certbot command")
 
 
-def _create_pfx(domain, certbot_folder):
-    domain_folder = os.path.join(certbot_folder, "live", domain)
+def _create_pfx(domain, certbot_folder, pfx_password):
+    domain_folder = os.path.join(certbot_folder, "config", "live", domain)
     pfx_path = os.path.join(domain_folder, "certificate.pfx")
     privkey_path = os.path.join(domain_folder, "privkey.pem")
     fullchain_path = os.path.join(domain_folder, "fullchain.pem")
 
-    p = Popen(["openssl", "pkcs12", "-export", "--out", pfx_path, "-inkey", privkey_path, "-in", fullchain_path])
+    p = Popen([
+        "openssl", "pkcs12",
+        "-export",
+        "--out", pfx_path,
+        "-inkey", privkey_path,
+        "-in", fullchain_path,
+        "-password", f"pass:{pfx_password}"
+    ])
     p.communicate()
     if p.returncode != 0:
         raise RuntimeError("Error during openssl command")
