@@ -51,6 +51,8 @@ def _run_certbot(domain, certbot_folder, validation_path):
         "--manual-cleanup-hook", os.path.join(CURRENT_DIR, "post_hook.py"),
     ], env=env)
     p.communicate()
+    if p.returncode != 0:
+        raise RuntimeError("Error during certbot command")
 
 
 def _create_pfx(domain, certbot_folder):
@@ -61,6 +63,8 @@ def _create_pfx(domain, certbot_folder):
 
     p = Popen(["openssl", "pkcs12", "-export", "--out", pfx_path, "-inkey", privkey_path, "-in", fullchain_path])
     p.communicate()
+    if p.returncode != 0:
+        raise RuntimeError("Error during openssl command")
 
 
 if __name__ == "__main__":
